@@ -14,4 +14,4 @@ group :development do
   gem "mocha"
 end
 
-gem "haml"
+gem "jruby-jena"

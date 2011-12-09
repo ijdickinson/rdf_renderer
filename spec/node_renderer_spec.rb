@@ -53,10 +53,10 @@ describe "NodeRenderer" do
     node1 = object_with_types( :test_type_1 )
     node2 = object_with_types( :test_type_2 )
 
-    template = subject.select_renderer( node1, :context, {} ).render( {} )
+    template = subject.select_renderer( node1, :context, {:types => [:test_type_1]} ).render( {} )
     template.should == "template1"
 
-    template = subject.select_renderer( node2, :context, {} ).render( {} )
+    template = subject.select_renderer( node2, :context, {:types => [:test_type_2]} ).render( {} )
     template.should == "template2"
   end
 
@@ -65,5 +65,16 @@ describe "NodeRenderer" do
 
     view = subject.view( :node => node1 )
     view.should == "template1\n"
+  end
+
+  it "should use the label renderer for an RDFS label" do
+    m = Jena::Core::ModelFactory.createDefaultModel
+    m.setNsPrefix( "rdfs", Jena::Vocab::RDFS.getURI )
+    r = m.createResource( "http://example.com/r" )
+    r.addProperty( Jena::Vocab::RDFS.label, "test label 1" )
+    r.addProperty( Jena::Vocab::RDF.type, Jena::Vocab::RDFS::Class)
+    view = subject.view( :node => r )
+    view.should match( /test label 1/ )
+    view.should match( /span class='rdf_resource Class'/ )
   end
 end

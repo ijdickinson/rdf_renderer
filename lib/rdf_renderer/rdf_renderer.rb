@@ -29,7 +29,13 @@ module RDFUI
 
     # Return true if this renderer will accept the given node in the given
     # context. Default is always accept.
-    def accept( node, context, types, args = {} )
+    #
+    # * +node+ - the node that is being rendered
+    # * +model+ - the Jena +Model+ containing RDF information
+    # * +context+ - the current context symbol
+    # * +types+ - the set of types of +node+
+    # * +options+ - hash of other method options
+    def accept( node, model, context, types, options = {} )
       true
     end
 

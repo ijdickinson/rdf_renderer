@@ -71,11 +71,13 @@ module RDFUI
       log.debug( "NodeRenderer#view: #{options.inspect}" ) if log
 
       node = options[:node] || options["node"]
-      return "<p class='warning'>No node to render!</p>" unless node
+      return "<div class='warning'>No node to render!</div>" unless node
+      return "<div class='warning'>Not an RDF node: #{node.inspect}</div>" unless node.is_a?( Jena::Core::RDFNode )
 
       options[:context] = options[:context] || options["context"] || default_context
       options[:node_renderer] = self
       options[:model] = get_model( options )
+      options[:types] = node.types
 
       r = select_renderer( node, options[:context], options )
       result = render( r.render( options ), options )
@@ -102,18 +104,18 @@ module RDFUI
     # * the default model
     def get_model( options )
       return options[:model] if options[:model]
-      return options[:node].getModel if options[:node].resource? && options[:node].getModel
+      return options[:node].getModel if options[:node] && options[:node].resource? && options[:node].getModel
       default_model
     end
 
     # Select a renderer for the given node and context, by asking all registered renderers
     # if they will +accept+ the given node with its context and, for efficiency, known types.
     def select_renderer( node, context, options )
-      types = node.types
       selected = nil
 
       RDF_Renderer.renderers.each do |rend|
-        selected = rend if rend.accept( node, context, types, options ) && (!selected || rend.priority > selected.priority)
+        accepted = rend.accept( node, get_model( options ), context, options[:types], options )
+        selected = rend if accepted && (!selected || rend.priority > selected.priority)
       end
 
       log.debug( "selected renderer = #{selected.inspect}") if log

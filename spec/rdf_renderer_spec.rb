@@ -16,7 +16,7 @@ describe "RDF_Renderer base class" do
   end
 
   it "should accept anything by default" do
-    subject.accept( :node, :context, [] ).should be_true
+    subject.accept( :node, :model, :context, [] ).should be_true
   end
 
   it "should return the template name as the default rendering" do

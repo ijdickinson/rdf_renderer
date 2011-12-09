@@ -1,0 +1,2 @@
+%span{:class => ([:rdf_resource] + types.map {|t| t.getLocalName})}
+  =node.property_values( ["rdfs:label", "skos:prefLabel"] ).first

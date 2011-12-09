@@ -1,5 +1,5 @@
 class TestResourceRenderer1 < RDFUI::RDF_Renderer
-  def accept( node, context, types, options = {} )
+  def accept( node, model, context, types, options = {} )
     types.include?( :test_type_1 )
   end
 
@@ -13,7 +13,7 @@ class TestResourceRenderer1 < RDFUI::RDF_Renderer
 end
 
 class TestResourceRenderer2 < RDFUI::RDF_Renderer
-  def accept( node, context, types, options = {} )
+  def accept( node, model, context, types, options = {} )
     types.include?( :test_type_2 )
   end
 
